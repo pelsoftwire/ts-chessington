@@ -1,6 +1,8 @@
 import Piece from './piece';
 import Player from '../player';
 import Board from '../board';
+import Square from "../square";
+import gameSettings from "../gameSettings";
 
 export default class King extends Piece {
     public constructor(player: Player) {
@@ -8,6 +10,19 @@ export default class King extends Piece {
     }
 
     public getAvailableMoves(board: Board) {
-        return new Array(0);
+        var currentPosition : Square = board.findPiece(this);
+        var availableMoves : Square[] = [];
+
+        var cardinals: [number, number][] = [[1, 1], [1, -1], [-1, -1], [-1, 1], [1, 0], [0, 1], [-1, 0], [0, -1]];
+
+        for (const [xp, yp]  of cardinals) {
+            var x = currentPosition.row + xp;
+            var y = currentPosition.col + yp;
+            if (0 <= x && x < gameSettings.BOARD_SIZE && 0 <= y && y < gameSettings.BOARD_SIZE) {
+                availableMoves.push(new Square(x, y));
+            }
+        }
+
+        return availableMoves;
     }
 }
