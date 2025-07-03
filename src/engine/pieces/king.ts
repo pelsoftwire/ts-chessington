@@ -19,7 +19,13 @@ export default class King extends Piece {
             var x = currentPosition.row + xp;
             var y = currentPosition.col + yp;
             if (0 <= x && x < gameSettings.BOARD_SIZE && 0 <= y && y < gameSettings.BOARD_SIZE) {
-                availableMoves.push(new Square(x, y));
+                var toMove : Square = new Square(x, y);
+                var pieceAtSquare : Piece | undefined = board.whatsAt(toMove)
+
+                // allow movement if space is empty, or if space contains an enemy piece that is NOT the king (taking a piece)
+                if (pieceAtSquare == undefined || (pieceAtSquare.player != this.player && ! (pieceAtSquare instanceof King))) {
+                    availableMoves.push(new Square(x, y));
+                }
             }
         }
 
