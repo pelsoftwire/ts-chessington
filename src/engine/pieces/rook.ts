@@ -13,17 +13,16 @@ export default class Rook extends Piece {
         var availableMoves : Square[] = [];
         var currentSquare : Square = board.findPiece(this);
 
-        for (var i = currentSquare.row + 1; i < gameSettings.BOARD_SIZE; ++i) {
-            availableMoves.push(new Square(i, currentSquare.col));
-        }
-        for (var i = currentSquare.row - 1; i >= 0; --i) {
-            availableMoves.push(new Square(i, currentSquare.col));
-        }
-        for (var i = currentSquare.col + 1; i < gameSettings.BOARD_SIZE; ++i) {
-            availableMoves.push(new Square(currentSquare.row, i));
-        }
-        for (var i = currentSquare.col - 1; i >= 0; --i) {
-            availableMoves.push(new Square(currentSquare.row, i));
+        var cardinals : [number, number][] = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+
+        for (const [xp, yp] of cardinals) {
+            var x = currentSquare.row + xp;
+            var y = currentSquare.col + yp;
+            while (0 <= x && x < gameSettings.BOARD_SIZE && 0 <= y && y < gameSettings.BOARD_SIZE) {
+                availableMoves.push(new Square(x, y));
+                x += xp;
+                y += yp;
+            }
         }
 
         return availableMoves;
