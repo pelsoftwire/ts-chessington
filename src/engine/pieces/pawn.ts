@@ -2,6 +2,7 @@ import Piece from './piece';
 import Player from '../player';
 import Board from '../board';
 import Square from "../square";
+import gameSettings from "../gameSettings";
 
 export default class Pawn extends Piece {
     public constructor(player: Player) {
@@ -15,12 +16,15 @@ export default class Pawn extends Piece {
 
         var direction = this.player == Player.WHITE ? 1 : -1;
 
-        var inFront : Square = new Square(currentSquare.row + direction, currentSquare.col)
-        var twoInFront : Square = new Square(currentSquare.row + direction * 2, currentSquare.col);
+        var inFrontY = currentSquare.row + direction;
+        var twoInFrontY = currentSquare.row + direction * 2;
 
-        if (board.whatsAt(inFront) == undefined) {
+        var inFront : Square = new Square(inFrontY, currentSquare.col)
+        var twoInFront : Square = new Square(twoInFrontY, currentSquare.col);
+
+        if (inFrontY >= 0 && inFrontY < gameSettings.BOARD_SIZE && board.whatsAt(inFront) == undefined) {
             availableMoves.push(inFront);
-            if (!this.hasPieceMoved() && board.whatsAt(twoInFront) == undefined) {
+            if (!this.hasPieceMoved() && twoInFrontY >= 0 && twoInFrontY < gameSettings.BOARD_SIZE && board.whatsAt(twoInFront) == undefined) {
                 availableMoves.push(twoInFront);
             }
         }
