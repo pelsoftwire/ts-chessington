@@ -44,6 +44,10 @@ export default class Board {
         return this.board[square.row][square.col];
     }
 
+    public squareInBounds(square: Square) {
+        return square.row >= 0 && square.row < this.board.length && square.col >= 0 && square.col < this.board.length;
+    }
+
     private createBoard() {
         const board = new Array(GameSettings.BOARD_SIZE);
         for (let i = 0; i < board.length; i++) {
