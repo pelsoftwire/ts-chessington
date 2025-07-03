@@ -40,6 +40,10 @@ export default class Board {
         }
     }
 
+    public whatsAt(square: Square) {
+        return this.board[square.row][square.col];
+    }
+
     private createBoard() {
         const board = new Array(GameSettings.BOARD_SIZE);
         for (let i = 0; i < board.length; i++) {
