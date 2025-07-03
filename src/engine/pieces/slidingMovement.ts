@@ -15,7 +15,9 @@ export default function slidingMovement(board: Board, cardinals: [number, number
         var toMove : Square = new Square(x, y);
         while (0 <= x && x < gameSettings.BOARD_SIZE && 0 <= y && y < gameSettings.BOARD_SIZE) {
             var pieceAtSquare : Piece | undefined  = board.whatsAt(toMove);
-            // TODO: add rook can take opposing pieces ONLY
+
+            // allow movement to empty spaces, or movement to spaces that contain an enemy piece that is NOT a king
+            // if a space contains a piece, stop "sliding" in that direction after affirming whether that space can be moved to (cant move past pieces)
             if (pieceAtSquare == undefined) {
                 availableMoves.push(toMove);
                 x += xp;
