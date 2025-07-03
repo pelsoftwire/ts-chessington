@@ -15,9 +15,14 @@ export default class Pawn extends Piece {
 
         var direction = this.player == Player.WHITE ? 1 : -1;
 
-        availableMoves.push(new Square(currentSquare.row + direction, currentSquare.col));
-        if (!this.hasPieceMoved()) {
-            availableMoves.push(new Square(currentSquare.row + direction * 2, currentSquare.col));
+        var inFront : Square = new Square(currentSquare.row + direction, currentSquare.col)
+        var twoInFront : Square = new Square(currentSquare.row + direction * 2, currentSquare.col);
+
+        if (board.whatsAt(inFront) == undefined) {
+            availableMoves.push(inFront);
+            if (!this.hasPieceMoved() && board.whatsAt(twoInFront) == undefined) {
+                availableMoves.push(twoInFront);
+            }
         }
 
         return availableMoves;
