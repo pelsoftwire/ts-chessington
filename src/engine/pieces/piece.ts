@@ -13,7 +13,7 @@ export default class Piece {
         this.numberMoves = 0;
     }
 
-    public getAvailableMoves(board: Board) {
+    public getAvailableMoves(board: Board) :Square[] {
         throw new Error('This method must be implemented, and return a list of available moves');
     }
 

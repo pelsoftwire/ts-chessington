@@ -3,6 +3,7 @@ import Board from '../../../src/engine/board';
 import Player from '../../../src/engine/player';
 import Square from '../../../src/engine/square';
 import Pawn from '../../../src/engine/pieces/pawn';
+import Rook from "../../../src/engine/pieces/rook";
 
 describe('King', () => {
     let board: Board;
@@ -74,4 +75,56 @@ describe('King', () => {
 
         moves.should.not.deep.include(Square.at(5, 5));
     });
+
+    describe("Castling", () => {
+        var king : King;
+        var rook : Rook;
+        beforeEach(() => {
+            king = new King(Player.WHITE);
+            rook = new Rook(Player.WHITE);
+
+            board.setPiece(Square.at(0, 0), rook);
+            board.setPiece(Square.at(0, 4), king);
+
+        });
+
+        it("Castling is possible when neither piece has moved and there are no obstructions", () => {
+            const moves = king.getAvailableMoves(board);
+
+            moves.should.deep.include(Square.at(0, 2));
+        })
+
+        it("Castling is not possible if there is an obstructing piece", () => {
+            var obstructingPiece : Pawn = new Pawn(Player.WHITE);
+            board.setPiece(Square.at(0, 1), obstructingPiece);
+
+            const moves = king.getAvailableMoves(board);
+
+            moves.should.not.deep.include(Square.at(0, 2));
+        })
+
+        it("Castling is not possible if king has moved", () => {
+            king.numberMoves = 1;
+            const moves = king.getAvailableMoves(board);
+
+            moves.should.not.deep.include(Square.at(0, 2));
+        })
+
+        it("Castling is not possible if rook has moved", () => {
+            rook.numberMoves = 1;
+            const moves = king.getAvailableMoves(board);
+
+            moves.should.not.deep.include(Square.at(0, 2));
+        })
+
+        it("Castling is not possible if spaces inbetween are being attacked", () => {
+            var enemyRook : Rook = new Rook(Player.BLACK);
+            board.setPiece(Square.at(5, 1), enemyRook);
+
+            const moves = king.getAvailableMoves(board);
+
+            moves.should.not.deep.include(Square.at(0, 2));
+        })
+
+    })
 });

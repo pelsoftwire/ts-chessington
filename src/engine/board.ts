@@ -33,6 +33,24 @@ export default class Board {
         throw new Error('The supplied piece is not on the board');
     }
 
+    public isAttacked(squareToCheck:Square, attackingPlayer:Player):boolean {
+        for(var i=0; i<this.board.length; i++){
+            for(var j = 0; j < this.board.length; j++) {
+                var piece = this.getPiece(Square.at(i,j));
+                if(piece === undefined) {
+                    continue;
+                }
+                if (piece.player == attackingPlayer) {
+                    if (piece.getAvailableMoves(this).includes(squareToCheck)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
     public getLastMoved(): Piece | undefined {
         return this.lastMoved;
     }

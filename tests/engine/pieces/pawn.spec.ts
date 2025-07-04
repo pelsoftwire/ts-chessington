@@ -88,7 +88,6 @@ describe('Pawn', () => {
             const pawn = new Pawn(Player.WHITE);
             const opposingPawn = new Pawn(Player.BLACK);
 
-
             it('Allowed (first move)', () => {
                 opposingPawn.numberMoves = 0;
 

@@ -3,6 +3,7 @@ import Player from '../player';
 import Board from '../board';
 import Square from "../square";
 import gameSettings from "../gameSettings";
+import Rook from "./rook";
 
 export default class King extends Piece {
     public constructor(player: Player) {
@@ -26,6 +27,28 @@ export default class King extends Piece {
                 if (pieceAtSquare == undefined || (pieceAtSquare.player != this.player && ! (pieceAtSquare instanceof King))) {
                     availableMoves.push(new Square(x, y));
                 }
+            }
+        }
+
+        var castlingCardinal: number[] = [-1,1]
+        for(const dir of castlingCardinal) {
+            var i = currentPosition.col + dir;
+            var obstructedCastle = false;
+            var inCheck = false;
+            while(0< i && i< 7) {
+                if(board.getPiece(Square.at(currentPosition.row, i))!==undefined){
+                    obstructedCastle = true;
+                    break;
+                }
+                if(Math.abs(i-currentPosition.col) <=2 && board.isAttacked(Square.at(currentPosition.row, i), this.player==Player.WHITE ? Player.BLACK : Player.WHITE)) {
+                    // TODO fix available move override. Fix type.
+                    inCheck = true;
+                }
+                i+= dir;
+            }
+            var cornerPiece:Piece|undefined = board.getPiece(Square.at(currentPosition.row, i));
+            if(cornerPiece instanceof Rook && !obstructedCastle && !inCheck && this.numberMoves==0 && cornerPiece.numberMoves == 0) {
+                availableMoves.push(Square.at(currentPosition.row, currentPosition.col+2*dir));
             }
         }
 
