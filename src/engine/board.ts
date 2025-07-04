@@ -6,10 +6,12 @@ import Piece from './pieces/piece';
 export default class Board {
     public currentPlayer: Player;
     private readonly board: (Piece | undefined)[][];
+    private lastMoved : Piece | undefined;
 
     public constructor(currentPlayer?: Player) {
         this.currentPlayer = currentPlayer ? currentPlayer : Player.WHITE;
         this.board = this.createBoard();
+        this.lastMoved= undefined;
     }
 
     public setPiece(square: Square, piece: Piece | undefined) {
@@ -31,12 +33,17 @@ export default class Board {
         throw new Error('The supplied piece is not on the board');
     }
 
+    public getLastMoved(): Piece | undefined {
+        return this.lastMoved;
+    }
+
     public movePiece(fromSquare: Square, toSquare: Square) {
         const movingPiece = this.getPiece(fromSquare);        
         if (!!movingPiece && movingPiece.player === this.currentPlayer) {
             this.setPiece(toSquare, movingPiece);
             this.setPiece(fromSquare, undefined);
             this.currentPlayer = (this.currentPlayer === Player.WHITE ? Player.BLACK : Player.WHITE);
+            this.lastMoved = movingPiece;
         }
     }
 

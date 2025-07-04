@@ -5,10 +5,12 @@ import Square from '../square';
 export default class Piece {
     public player: Player;
     private hasMoved: boolean;
+    public numberMoves: number;
 
     public constructor(player: Player) {
         this.player = player;
         this.hasMoved = false;
+        this.numberMoves = 0;
     }
 
     public getAvailableMoves(board: Board) {
@@ -19,6 +21,7 @@ export default class Piece {
         const currentSquare = board.findPiece(this);
         board.movePiece(currentSquare, newSquare);
         this.hasMoved = true;
+        this.numberMoves += 1;
     }
 
     public hasPieceMoved() {

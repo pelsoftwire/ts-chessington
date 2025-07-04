@@ -83,6 +83,67 @@ describe('Pawn', () => {
 
             moves.should.not.deep.include(Square.at(5, 3));
         });
+        describe('En passant', () =>{
+
+            const pawn = new Pawn(Player.WHITE);
+            const opposingPawn = new Pawn(Player.BLACK);
+
+
+            it('Allowed (first move)', () => {
+                opposingPawn.numberMoves = 0;
+
+                board.setPiece(Square.at(4, 0), pawn);
+                board.setPiece(Square.at(6, 1), opposingPawn);
+
+                board.currentPlayer=Player.BLACK;
+
+                opposingPawn.moveTo(board,Square.at(4, 1));
+
+                const moves = pawn.getAvailableMoves(board);
+
+                moves.should.deep.include(Square.at(5, 1));
+            });
+            it('Not allowed (not first move)', () => {
+                opposingPawn.numberMoves = 1;
+
+                board.setPiece(Square.at(4, 0), pawn);
+                board.setPiece(Square.at(5, 1), opposingPawn);
+
+                board.currentPlayer=Player.BLACK;
+
+                opposingPawn.moveTo(board,Square.at(4, 1));
+
+                const moves = pawn.getAvailableMoves(board);
+
+                moves.should.not.deep.include(Square.at(5, 1));
+            });
+            it('Not allowed (not last move)', () => {
+                opposingPawn.numberMoves = 0;
+
+                board.setPiece(Square.at(3, 0), pawn);
+                board.setPiece(Square.at(6, 1), opposingPawn);
+
+                opposingPawn.moveTo(board,Square.at(4, 1));
+                pawn.moveTo(board,Square.at(4, 0));
+
+                const moves = pawn.getAvailableMoves(board);
+
+                moves.should.not.deep.include(Square.at(5, 1));
+            });
+            it('Capture', () => {
+                opposingPawn.numberMoves = 0;
+
+                board.setPiece(Square.at(4, 0), pawn);
+                board.setPiece(Square.at(2, 1), opposingPawn);
+
+                board.currentPlayer=Player.BLACK;
+                opposingPawn.moveTo(board,Square.at(4,1));
+
+                pawn.moveTo(board, Square.at(5,1));
+
+                board.getPiece(Square.at(4,1))?.should.deep.equal(undefined);
+            });
+        });
     });
 
     describe('black pawns', () => {
@@ -183,5 +244,63 @@ describe('Pawn', () => {
         const moves = pawn.getAvailableMoves(board);
 
         moves.should.not.deep.include(Square.at(4, 3));
+    });
+    describe('En passant', () => {
+        const pawn = new Pawn(Player.BLACK);
+        const opposingPawn = new Pawn(Player.WHITE);
+
+        it('Allowed (first move)', () => {
+            opposingPawn.numberMoves = 0;
+
+            board.setPiece(Square.at(3, 0), pawn);
+            board.setPiece(Square.at(1, 1), opposingPawn);
+
+            board.currentPlayer = Player.WHITE;
+            opposingPawn.moveTo(board, Square.at(3,1));
+
+            const moves = pawn.getAvailableMoves(board);
+
+            moves.should.deep.include(Square.at(2, 1));
+        });
+        it('Not allowed (not first move)', () => {
+            opposingPawn.numberMoves = 1;
+
+            board.setPiece(Square.at(3, 0), pawn);
+            board.setPiece(Square.at(2, 1), opposingPawn);
+
+            board.currentPlayer = Player.WHITE;
+            opposingPawn.moveTo(board, Square.at(3,1));
+
+            const moves = pawn.getAvailableMoves(board);
+
+            moves.should.not.deep.include(Square.at(2, 1));
+        });
+        it('Not allowed (not last move)', () => {
+            opposingPawn.numberMoves = 0;
+
+            board.setPiece(Square.at(4, 0), pawn);
+            board.setPiece(Square.at(1, 1), opposingPawn);
+            board.currentPlayer = Player.WHITE;
+
+            opposingPawn.moveTo(board,Square.at(3, 1));
+            pawn.moveTo(board,Square.at(3, 0));
+
+            const moves = pawn.getAvailableMoves(board);
+
+            moves.should.not.deep.include(Square.at(2, 1));
+        });
+        it('Capture', () => {
+            opposingPawn.numberMoves = 0;
+
+            board.setPiece(Square.at(3, 0), pawn);
+            board.setPiece(Square.at(1, 1), opposingPawn);
+
+            board.currentPlayer = Player.WHITE;
+
+            opposingPawn.moveTo(board, Square.at(3,1));
+            pawn.moveTo(board, Square.at(2, 1));
+
+            board.getPiece(Square.at(3,1))?.should.deep.equal(undefined);
+        });
     });
 });
